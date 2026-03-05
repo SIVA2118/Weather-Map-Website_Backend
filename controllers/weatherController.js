@@ -50,7 +50,57 @@ const searchWeather = async (req, res) => {
     }
 };
 
+const getForecast = async (req, res) => {
+    const { lat, lon } = req.query;
+
+    if (!lat || !lon) {
+        return res.status(400).json({ message: "Latitude and Longitude are required" });
+    }
+
+    const API_KEY = process.env.OPENWEATHER_API_KEY;
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            const errorData = await response.json();
+            return res.status(response.status).json({ message: errorData.message || "Error fetching forecast data" });
+        }
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error("Forecast Fetch Error:", error);
+        res.status(500).json({ message: "Internal server error while fetching forecast" });
+    }
+};
+
+const getAQI = async (req, res) => {
+    const { lat, lon } = req.query;
+
+    if (!lat || !lon) {
+        return res.status(400).json({ message: "Latitude and Longitude are required" });
+    }
+
+    const API_KEY = process.env.OPENWEATHER_API_KEY;
+    const url = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            const errorData = await response.json();
+            return res.status(response.status).json({ message: errorData.message || "Error fetching AQI data" });
+        }
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error("AQI Fetch Error:", error);
+        res.status(500).json({ message: "Internal server error while fetching AQI" });
+    }
+};
+
 module.exports = {
     getWeather,
-    searchWeather
+    searchWeather,
+    getForecast,
+    getAQI
 };
