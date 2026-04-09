@@ -1,0 +1,309 @@
+{
+  "info": {
+    "name": "Weather Web API - Full Test Suite",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": []
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var body = pm.response.json();",
+              "pm.test('Health response has message', function () {",
+              "  pm.expect(body).to.have.property('message');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Current Weather by Coordinates",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/weather?lat=7.8731&lon=80.7718",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "weather"
+          ],
+          "query": [
+            {
+              "key": "lat",
+              "value": "7.8731"
+            },
+            {
+              "key": "lon",
+              "value": "80.7718"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var body = pm.response.json();",
+              "pm.test('Current weather has main temperature', function () {",
+              "  pm.expect(body).to.have.property('main');",
+              "  pm.expect(body.main).to.have.property('temp');",
+              "});",
+              "pm.test('Current weather has weather array', function () {",
+              "  pm.expect(body).to.have.property('weather');",
+              "  pm.expect(body.weather).to.be.an('array').that.is.not.empty;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Forecast by Coordinates",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/weather/forecast?lat=7.8731&lon=80.7718",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "weather",
+            "forecast"
+          ],
+          "query": [
+            {
+              "key": "lat",
+              "value": "7.8731"
+            },
+            {
+              "key": "lon",
+              "value": "80.7718"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var body = pm.response.json();",
+              "pm.test('Forecast has list array', function () {",
+              "  pm.expect(body).to.have.property('list');",
+              "  pm.expect(body.list).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - AQI by Coordinates",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/weather/aqi?lat=7.8731&lon=80.7718",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "weather",
+            "aqi"
+          ],
+          "query": [
+            {
+              "key": "lat",
+              "value": "7.8731"
+            },
+            {
+              "key": "lon",
+              "value": "80.7718"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var body = pm.response.json();",
+              "pm.test('AQI payload has list array', function () {",
+              "  pm.expect(body).to.have.property('list');",
+              "  pm.expect(body.list).to.be.an('array').that.is.not.empty;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Search Weather by City",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/weather/search?city=Colombo",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "weather",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "city",
+              "value": "Colombo"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var body = pm.response.json();",
+              "pm.test('Search response has city name', function () {",
+              "  pm.expect(body).to.have.property('name');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Validation: Missing lon",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/weather?lat=7.8731",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "weather"
+          ],
+          "query": [
+            {
+              "key": "lat",
+              "value": "7.8731"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "",
+              "var body = pm.response.json();",
+              "pm.test('Validation error message exists', function () {",
+              "  pm.expect(body).to.have.property('message');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 - Validation: Missing city",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/weather/search",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "weather",
+            "search"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 400', function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "",
+              "var body = pm.response.json();",
+              "pm.test('Validation error message exists', function () {",
+              "  pm.expect(body).to.have.property('message');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://weather-map-website-backend.onrender.com"
+    }
+  ]
+}
